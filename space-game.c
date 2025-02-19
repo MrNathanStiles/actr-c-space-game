@@ -12,8 +12,8 @@ void draw_station(struct MyObjectStation *station)
 {
     actr_canvas2d_fill_style(0, 255, 0, 100);
     actr_canvas2d_fill_rect(
-        station->object.position.x - state->player.object.position.x + actrState->canvasSize.w / 2,
-        station->object.position.y - state->player.object.position.y + actrState->canvasSize.h / 2,
+        station->object.position.x - state->player.object.position.x + actr_ui_state->canvas_size.w / 2,
+        station->object.position.y - state->player.object.position.y + actr_ui_state->canvas_size.h / 2,
         STATION_SIZE, STATION_SIZE);
 }
 void draw_asteroid(struct MyObjectAsteroid *asteroid)
@@ -27,8 +27,8 @@ void draw_asteroid(struct MyObjectAsteroid *asteroid)
 
     asteroid->object.rotation += 0.001;
 
-    int x = asteroid->object.position.x - state->player.object.position.x + actrState->canvasSize.w / 2;
-    int y = asteroid->object.position.y - state->player.object.position.y + actrState->canvasSize.h / 2;
+    int x = asteroid->object.position.x - state->player.object.position.x + actr_ui_state->canvas_size.w / 2;
+    int y = asteroid->object.position.y - state->player.object.position.y + actr_ui_state->canvas_size.h / 2;
 
     /*
     drawass(
@@ -89,8 +89,8 @@ void draw_ship(struct MyObjectShip *ship, int thrusting, int shooting)
     double sin = ship->object.sin;
     double cos = ship->object.cos;
 
-    long long x = actrState->canvasSize.w / 2;
-    long long y = actrState->canvasSize.h / 2;
+    long long x = actr_ui_state->canvas_size.w / 2;
+    long long y = actr_ui_state->canvas_size.h / 2;
 
     actr_canvas2d_fill_style(255, 255, 255, 100);
     actr_canvas2d_begin_path();
@@ -154,11 +154,11 @@ void draw_ship(struct MyObjectShip *ship, int thrusting, int shooting)
             actr_canvas2d_stroke_style(0, 255, 0, 100);
             actr_canvas2d_begin_path();
             actr_canvas2d_moveto(
-                actrState->canvasSize.w / 2 + direction.x * 50,
-                actrState->canvasSize.h / 2 + direction.y * 50);
+                actr_ui_state->canvas_size.w / 2 + direction.x * 50,
+                actr_ui_state->canvas_size.h / 2 + direction.y * 50);
             actr_canvas2d_lineto(
-                actrState->canvasSize.w / 2 + direction.x * 60,
-                actrState->canvasSize.h / 2 + direction.y * 60);
+                actr_ui_state->canvas_size.w / 2 + direction.x * 60,
+                actr_ui_state->canvas_size.h / 2 + direction.y * 60);
             actr_canvas2d_stroke();
 
             struct ActrFormatState * format = actr_format("%s");
@@ -177,8 +177,8 @@ void draw_ship(struct MyObjectShip *ship, int thrusting, int shooting)
 
             
             actr_canvas2d_fill_text(
-                actrState->canvasSize.w / 2 + direction.x * 60+ padx,
-                actrState->canvasSize.h / 2 + direction.y * 60 + pady,
+                actr_ui_state->canvas_size.w / 2 + direction.x * 60+ padx,
+                actr_ui_state->canvas_size.h / 2 + direction.y * 60 + pady,
                 text
             );
 
@@ -207,7 +207,7 @@ void draw_messages()
     struct ActrList *last = 0;
     struct ActrList *temp = 0;
     struct MyMessage *message;
-    int top = actrState->canvasSize.h - 40;
+    int top = actr_ui_state->canvas_size.h - 40;
     actr_canvas2d_fill_style(255, 255, 255, 100);
     while (list)
     {
@@ -236,14 +236,14 @@ void draw_waypoint(struct MyObjectWaypoint *waypoint)
 {
     actr_canvas2d_fill_style(255, 0, 255, 100);
     actr_canvas2d_fill_text(
-        waypoint->object.position.x - state->player.object.position.x + actrState->canvasSize.w / 2,
-        waypoint->object.position.y - state->player.object.position.y + actrState->canvasSize.h / 2,
+        waypoint->object.position.x - state->player.object.position.x + actr_ui_state->canvas_size.w / 2,
+        waypoint->object.position.y - state->player.object.position.y + actr_ui_state->canvas_size.h / 2,
         waypoint->name);
 }
 void draw_view()
 {
-    long long x = state->player.object.position.x - actrState->canvasSize.w / 2;
-    long long y = state->player.object.position.y - actrState->canvasSize.h / 2;
+    long long x = state->player.object.position.x - actr_ui_state->canvas_size.w / 2;
+    long long y = state->player.object.position.y - actr_ui_state->canvas_size.h / 2;
 
     query_view();
     actr_canvas2d_fill_style(255, 255, 255, 10);
@@ -468,10 +468,10 @@ int lines_intersect(struct ActrPointF a1, struct ActrPointF a2, struct ActrPoint
 void query_view()
 {
     struct ActrQuadTreeBounds bounds;
-    bounds.point.x = state->player.object.position.x - actrState->canvasSize.w / 2;
-    bounds.point.y = state->player.object.position.y - actrState->canvasSize.h / 2;
-    bounds.size.w = actrState->canvasSize.w;
-    bounds.size.h = actrState->canvasSize.h;
+    bounds.point.x = state->player.object.position.x - actr_ui_state->canvas_size.w / 2;
+    bounds.point.y = state->player.object.position.y - actr_ui_state->canvas_size.h / 2;
+    bounds.size.w = actr_ui_state->canvas_size.w;
+    bounds.size.h = actr_ui_state->canvas_size.h;
     actr_quad_tree_query(state->tree, &bounds, state->result);
 }
 
@@ -541,8 +541,9 @@ double wrapPITAU(double value)
 }
 
 [[clang::export_name("actr_init")]]
-void actr_init()
+void actr_init(int w, int h)
 {
+    actr_ui_init(w, h);
     state = actr_malloc(sizeof(struct MyState));
     state->identity = 1;
     init_object(&state->player.object, MyObjectTypeShip, 0, 0, PI, 3500);
@@ -562,6 +563,8 @@ void aspect(float a);
 void actr_resize(float w, float h)
 {
     state->aspect = w / h;
+    actr_ui_state->canvas_size.w = w;
+    actr_ui_state->canvas_size.h = h;
     // aspect(state->aspect);
 }
 
@@ -906,7 +909,7 @@ void draw_menu()
     {
         struct MyMenuItem *item = state->menu->items->head[i];
         int width = margin + margin + strlen(item->text) * 9;
-        if (left + width + margin > actrState->canvasSize.w)
+        if (left + width + margin > actr_ui_state->canvas_size.w)
         {
             left = margin;
             top += height + margin;
@@ -956,7 +959,7 @@ void actr_step(double delta)
     update_ship(&state->player, delta, rotate, thrust, shoot);
 
     actr_canvas2d_fill_style(0, 0, 0, 100);
-    actr_canvas2d_fill_rect(-10, -10, actrState->canvasSize.w + 20, actrState->canvasSize.h + 20);
+    actr_canvas2d_fill_rect(-10, -10, actr_ui_state->canvas_size.w + 20, actr_ui_state->canvas_size.h + 20);
 
     draw_view();
     draw_ship(&state->player, thrust, shoot);
@@ -985,11 +988,11 @@ void actr_step(double delta)
 
     char *text = actr_format_close(format);
     actr_canvas2d_fill_style(255, 255, 255, 100);
-    actr_canvas2d_fill_text(5, actrState->canvasSize.h - 5, text);
+    actr_canvas2d_fill_text(5, actr_ui_state->canvas_size.h - 5, text);
     actr_free(text);
 
     text = actr_memory_report();
-    actr_canvas2d_fill_text(5, actrState->canvasSize.h - 20, text);
+    actr_canvas2d_fill_text(5, actr_ui_state->canvas_size.h - 20, text);
     actr_free(text);
 
     struct ActrPoint64 offset;
@@ -997,8 +1000,8 @@ void actr_step(double delta)
     // offset.x = -(state->player.position.x + actrState->canvasSize.w);
     // offset.y = -(state->player.position.y + actrState->canvasSize.h);
 
-    offset.x = (state->player.object.position.x - actrState->canvasSize.w / 2);
-    offset.y = (state->player.object.position.y - actrState->canvasSize.h / 2);
+    offset.x = (state->player.object.position.x - actr_ui_state->canvas_size.w / 2);
+    offset.y = (state->player.object.position.y - actr_ui_state->canvas_size.h / 2);
 
     // actr_quad_tree_draw(state->tree, offset);
 }
