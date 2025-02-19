@@ -1,5 +1,5 @@
 To update latest headers run the following command
-git subtree pull --prefix header https://github.com/MrNathanStiles/actr-c-header.git main --squash
+git subtree pull --prefix header https://github.com/MrNathanStiles/actr-c-header.git main --squash -m "update header files"
 
 To run the auto build and publish on commit:
 You may need to re-enable actions in in your repository
