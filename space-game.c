@@ -6,6 +6,7 @@
 #include "actrprng.h"
 #include "spacegame.h"
 #include "actrlist.h"
+#include "actrfetch.h"
 
 struct MyState *state;
 void draw_station(struct MyObjectStation *station)
@@ -543,6 +544,7 @@ double wrapPITAU(double value)
 [[clang::export_name("actr_init")]]
 void actr_init(int w, int h)
 {
+    actr_fetch_image("https://mrnathanstiles.github.io/flower.png", 99);
     actr_ui_init(w, h);
     state = actr_malloc(sizeof(struct MyState));
     state->identity = 1;
@@ -1002,6 +1004,9 @@ void actr_step(double delta)
 
     offset.x = (state->player.object.position.x - actr_ui_state->canvas_size.w / 2);
     offset.y = (state->player.object.position.y - actr_ui_state->canvas_size.h / 2);
+
+    int imagew = 425, imageh = 438;
+    actr_canvas2d_draw_image(99, 0,0, imagew, imageh, 10, 10, imagew, imageh);
 
     // actr_quad_tree_draw(state->tree, offset);
 }
