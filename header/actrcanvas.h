@@ -1,6 +1,6 @@
 #ifndef ACTRCANVAS_H
 #define ACTRCANVAS_H
-
+#include "actrwasm.h"
 extern void actr_canvas2d_fill_style(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
 extern void actr_canvas2d_stroke_style(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
 
@@ -11,6 +11,9 @@ extern void actr_canvas2d_arcTo(float x1, float y1, float x2, float y2, float ra
 
 extern void actr_canvas2d_ellipse(float x, float y, float radiusX, float radiusY, float rotation, float startAngle, float endAngle, char counterclockwise);
 
+extern void actr_canvas2d_draw_image(int image, int sx, int sy, int sWidth, int sHeight, int dx, int dy, int dWidth, int dHeight);
+
+    
 extern void actr_canvas2d_fill();
 extern void actr_canvas2d_fill_rect(float x, float y, float w, float h);
 extern void _actr_canvas2d_fill_text_length(float x, float y, const char *text, int length);
