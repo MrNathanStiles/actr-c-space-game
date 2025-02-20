@@ -1,10 +1,13 @@
 #ifndef ACTRGITHUB_H
 #define ACTRGITHUB_H
+#include "actrwasm.h"
 #include "actrasync.h"
 extern int _actr_fetch_text_length(char * url, int urlLength, int mapId, char * name, int nameLength);
 
 extern int _actr_fetch_json_length(char * url, int urlLength, int jsonId);
 
+extern int _actr_fetch_image_length(char *url, int urlLength, int jsonId);
+    
 // requires 
 // fetch the url asynchronously, puts the result into the provided map
 // calls actr_async_result with the returned handle and success indicator  
@@ -20,6 +23,7 @@ int actr_fetch_text(char * url, int mapId, char * name) {
 int actr_fetch_json(char * url, int jsonId) {
     return _actr_fetch_json_length(url, strlen(url), jsonId);
 }
-
-
+int actr_fetch_image(char *url, int jsonId) {
+    return _actr_fetch_image_length(url, strlen(url), jsonId);
+}
 #endif
