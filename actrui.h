@@ -293,10 +293,8 @@ int _actr_ui_query_sort_comparator(void * a, void * b) {
     }
     return c1->zindex < c2->zindex;
 }
-void uiquery(int x, int y, int w, int h);
 void _actr_ui_query(int x, int y, int w, int h)
 {
-    uiquery(x,y,w,h);
     struct ActrQuadTreeBounds area;
     area.point.x = x;
     area.point.y = y;
