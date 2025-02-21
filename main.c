@@ -368,15 +368,19 @@ struct MyObjectStation *init_station(double x, double y)
 
 void build_station(struct ActrPointD *point)
 {
+    struct ActrQuadTreeLeaf *leaf;
+    struct MyObject *object;
     struct ActrQuadTreeBounds area;
+    
+    double minDist2 = (STATION_SIZE * 2) * (STATION_SIZE * 2);
+    
     area.point.x = point->x - GRID_SIZE;
     area.point.y = point->y - GRID_SIZE;
     area.size.w = GRID_SIZE * 2;
     area.size.h = GRID_SIZE * 2;
+    
     actr_quad_tree_query(state->tree, &area, state->result);
-    struct ActrQuadTreeLeaf *leaf;
-    struct MyObject *object;
-    double minDist2 = (STATION_SIZE * 2) * (STATION_SIZE * 2);
+    
     for (int i = 0; i < state->result->count; i++)
     {
 
@@ -460,8 +464,6 @@ int lines_intersect(struct ActrPointF a1, struct ActrPointF a2, struct ActrPoint
         return 0;
     }
 
-    // intersection = a1 + t * b;
-
     return 1;
 }
 
@@ -488,8 +490,6 @@ enum MyOre random_ore()
 
 void rotate_point(struct ActrPointD *point, double cos, double sin)
 {
-    // double x = actr_sin(rotation);
-    // double y = actr_cos(rotation);
     double x = point->x * cos - point->y * sin;
     double y = point->x * sin + point->y * cos;
     point->x = x;
@@ -558,14 +558,12 @@ void actr_init(int w, int h)
     init_area(grid);
 }
 
-void aspect(float a);
 [[clang::export_name("actr_resize")]]
 void actr_resize(float w, float h)
 {
     state->aspect = w / h;
     actr_ui_state->canvas_size.w = w;
     actr_ui_state->canvas_size.h = h;
-    // aspect(state->aspect);
 }
 
 struct MyMenu *menu_init(int key, struct MyMenu *previous)
@@ -607,6 +605,7 @@ void menu_close(struct MyMenu *menu)
     menu_free(menu);
     state->menu = 0;
 }
+
 int check_open_menu(int key)
 {
     int open = 0;
@@ -623,6 +622,7 @@ int check_open_menu(int key)
     }
     return open;
 }
+
 void waypoint_dispose(struct MyObjectWaypoint *waypoint)
 {
     actr_quad_tree_remove(waypoint->leaf);
@@ -631,6 +631,7 @@ void waypoint_dispose(struct MyObjectWaypoint *waypoint)
     actr_vector_remove(state->waypoints, actr_vector_find(state->waypoints, waypoint));
     actr_free(waypoint);
 }
+
 struct MyObjectWaypoint *init_waypoint(long long x, long long y)
 {
     struct MyObjectWaypoint *waypoint = actr_malloc(sizeof(struct MyObjectWaypoint));
@@ -645,6 +646,7 @@ struct MyObjectWaypoint *init_waypoint(long long x, long long y)
     actr_vector_add(state->waypoints, waypoint);
     return waypoint;
 }
+
 [[clang::export_name("actr_key_down")]]
 void actr_key_down(int key)
 {
@@ -785,10 +787,6 @@ void actr_key_up(int key)
     state->keys[key] = 0;
 }
 
-void pts(double x, double y, double w, double h);
-void query(double x, double y, double w, double h);
-void querycount(int i);
-void mine(int id);
 void update_ship(struct MyObjectShip *ship, double delta, float rotate, float thrust, int shooting)
 {
     // y
@@ -848,9 +846,7 @@ void update_ship(struct MyObjectShip *ship, double delta, float rotate, float th
         area.size.w = w;
         area.size.h = h;
 
-        query(area.point.x, area.point.y, area.size.w, area.size.h);
         actr_quad_tree_query(state->tree, &area, state->result);
-        querycount(state->result->count);
         struct MyObject *object;
         for (int i = 0; i < state->result->count; i++)
         {
@@ -870,7 +866,6 @@ void update_ship(struct MyObjectShip *ship, double delta, float rotate, float th
             {
                 ship->inventory.ore[asteroid->ore].quantity++;
             }
-            mine(asteroid->object.identity);
             break;
         }
         state->result->count = 0;
@@ -909,6 +904,7 @@ void draw_menu()
         left += width + margin;
     }
 }
+
 [[clang::export_name("actr_step")]]
 void actr_step(double delta)
 {
