@@ -162,29 +162,28 @@ void draw_ship(struct MyObjectShip *ship, int thrusting, int shooting)
                 actr_ui_state->canvas_size.h / 2 + direction.y * 60);
             actr_canvas2d_stroke();
 
-            struct ActrFormatState * format = actr_format("%s");
+            struct ActrFormatState *format = actr_format("%s");
             actr_format_int(format, actr_distance(&state->target, &state->player.object.position));
-            char * text = actr_format_close(format);
+            char *text = actr_format_close(format);
             int len = strlen(text);
-            
+
             int padx = 0;
             int pady = 10;
-            if (direction.y < 0) {
+            if (direction.y < 0)
+            {
                 pady = 0;
             }
-            if (direction.x < 0) {
+            if (direction.x < 0)
+            {
                 padx = -9 * len;
             }
 
-            
             actr_canvas2d_fill_text(
-                actr_ui_state->canvas_size.w / 2 + direction.x * 60+ padx,
+                actr_ui_state->canvas_size.w / 2 + direction.x * 60 + padx,
                 actr_ui_state->canvas_size.h / 2 + direction.y * 60 + pady,
-                text
-            );
+                text);
 
             actr_free(text);
-
         }
     }
 }
@@ -544,7 +543,6 @@ double wrapPITAU(double value)
 [[clang::export_name("actr_init")]]
 void actr_init(int w, int h)
 {
-    actr_fetch_image("https://mrnathanstiles.github.io/flower.png", 99);
     actr_ui_init(w, h);
     state = actr_malloc(sizeof(struct MyState));
     state->identity = 1;
@@ -569,8 +567,6 @@ void actr_resize(float w, float h)
     actr_ui_state->canvas_size.h = h;
     // aspect(state->aspect);
 }
-
-void gotkey(double key);
 
 struct MyMenu *menu_init(int key, struct MyMenu *previous)
 {
@@ -770,7 +766,6 @@ void actr_key_down(int key)
         }
     }
     state->keys[key] = 1;
-    gotkey(key);
 }
 
 [[clang::export_name("actr_key_up")]]
@@ -788,11 +783,8 @@ void actr_key_up(int key)
         }
     }
     state->keys[key] = 0;
-    // gotkey(key);
 }
 
-// int main() { }
-// void initialize() { main(); }
 void pts(double x, double y, double w, double h);
 void query(double x, double y, double w, double h);
 void querycount(int i);
@@ -823,9 +815,6 @@ void update_ship(struct MyObjectShip *ship, double delta, float rotate, float th
 
     if (shooting == 1)
     {
-
-        // todo move these scales to ship object
-
         struct ActrPointD nose, tip;
         // start of beam
         nose.x = 0;
@@ -842,8 +831,6 @@ void update_ship(struct MyObjectShip *ship, double delta, float rotate, float th
 
         tip.x += ship->object.position.x;
         tip.y += ship->object.position.y;
-
-        // pts(nose.x, nose.y, tip.x, tip.y);
 
         state->result->count = 0;
         struct ActrQuadTreeBounds area;
@@ -887,21 +874,15 @@ void update_ship(struct MyObjectShip *ship, double delta, float rotate, float th
             break;
         }
         state->result->count = 0;
-        /*
-        lines_intersect()
-            actr_canvas2d_stroke_style(255, 0, 255, 100);
-        actr_canvas2d_begin_path();
-        actr_canvas2d_moveto(x + tip.x * scale, y + tip.y * scale);
-        actr_canvas2d_lineto(x + pt.x * shoot * 2, y + pt.y * shoot * 2);
-        actr_canvas2d_stroke();
-        */
     }
 }
 
 void draw_menu()
 {
     if (state->menu == 0)
+    {
         return;
+    }
     int margin = 8;
     int height = 25;
     int top = margin;
@@ -966,7 +947,6 @@ void actr_step(double delta)
     draw_view();
     draw_ship(&state->player, thrust, shoot);
 
-    // struct ActrFormatState *format = actr_format("pos %s");
     struct ActrPoint32 tgrid = togrid(state->player.object.position);
 
     if (tgrid.x != state->lastGrid.x || tgrid.y != state->lastGrid.y)
@@ -999,14 +979,7 @@ void actr_step(double delta)
 
     struct ActrPoint64 offset;
 
-    // offset.x = -(state->player.position.x + actrState->canvasSize.w);
-    // offset.y = -(state->player.position.y + actrState->canvasSize.h);
-
     offset.x = (state->player.object.position.x - actr_ui_state->canvas_size.w / 2);
     offset.y = (state->player.object.position.y - actr_ui_state->canvas_size.h / 2);
-
-    int imagew = 425, imageh = 438;
-    actr_canvas2d_draw_image(99, 0,0, imagew, imageh, 10, 10, imagew, imageh);
-
     // actr_quad_tree_draw(state->tree, offset);
 }

@@ -2,20 +2,12 @@
 
 clear
 
-SET script=%1
-SET local=%2
+SET local=%1
 
-if "%script%" == "" (
-  echo Example use
-  echo ./pub.bat scriptFile.c
-  exit
-)
-if "%script%" == "space-game.c" (
-  if "%local%" == "local" (
-    SET apiKey=39s0s9x601h61gp454hb9ebhtv1jamtmg1gup8bcl9jqp83art
-  ) else (
-    SET apiKey=0
-  )
+if "%local%" == "local" (
+  SET apiKey=39s0s9x601h61gp454hb9ebhtv1jamtmg1gup8bcl9jqp83art
+) else (
+  SET apiKey=0
 )
 
 if "%apiKey%" == "" (
@@ -31,17 +23,17 @@ if "%local%" == "local" (
 
 REM echo Building...
 REM -fno-inline -nostdlib -nostdlibinc -nostdinc -nostdinc++  -fno-builtin
-clang %script% -fno-inline -I header --target=wasm32-unknown-unknown -Wl,-z,stack-size=65536 ^
+clang main.c -fno-inline -I header --target=wasm32-unknown-unknown -Wl,-z,stack-size=65536 ^
 --optimize=3 -nostdlib -nostdlibinc -nostdinc -nostdinc++  -fno-builtin ^
 -Wl,--no-entry -Wl,--export-all -Wl,--error-limit=0 ^
--Wl,--allow-undefined --wasm-opt --output %script%.wasm
+-Wl,--allow-undefined --wasm-opt --output main.wasm
 
 if %ERRORLEVEL% == 0 (
   REM echo Uploading...
   if "%local%" == "local" (
-    curl -k --fail -F "data=@./%script%.wasm" "%server%%apiKey%%"
+    curl -k --fail -F "data=@./main.wasm" "%server%%apiKey%%"
     ) else (
-    curl --fail -F "data=@./%script%.wasm" "%server%%apiKey%%"
+    curl --fail -F "data=@./main.wasm" "%server%%apiKey%%"
   )
   ) else (
   echo Build failed
@@ -50,8 +42,8 @@ if %ERRORLEVEL% == 0 (
 
 if %ERRORLEVEL% == 0 (
   echo.
-  echo %script%.wasm uploaded to %server%
-  rm %script%.wasm
+  echo main.wasm uploaded to %server%
+  rm main.wasm
 ) else (
-  echo %script%.wasm upload failed
+  echo main.wasm upload failed
 )
