@@ -543,6 +543,7 @@ double wrapPITAU(double value)
 [[clang::export_name("actr_init")]]
 void actr_init(int w, int h)
 {
+    actr_2d_init();
     actr_ui_init(w, h);
     state = actr_malloc(sizeof(struct MyState));
     state->identity = 1;
