@@ -20,7 +20,7 @@ struct ActrHashTable
 
 struct ActrHashTable *actr_hash_table_init()
 {
-    return actr_malloc(sizeof(struct ActrHashTable));
+    return (struct ActrHashTable *)actr_malloc(sizeof(struct ActrHashTable));
 }
 int _actr_hash_table_index(struct ActrHashTable *table, int id)
 {
@@ -33,7 +33,7 @@ void _actr_hash_table_expand(struct ActrHashTable *table)
     struct ActrHashTableEntry *entry;
     struct ActrHashTableEntry *next;
     table->allocated += ACTRHASHTABLE_H_ALLOC_SIZE;
-    newHead = actr_malloc(sizeof(void *) * table->allocated);
+    newHead = (struct ActrHashTableEntry **)actr_malloc(sizeof(void *) * table->allocated);
     if (table->head)
     {
         for (int i = 0; i < table->count; i++)
@@ -59,7 +59,7 @@ void actr_hash_table_insert(struct ActrHashTable *table, int id, void *item)
     {
         _actr_hash_table_expand(table);
     }
-    struct ActrHashTableEntry * entry = actr_malloc(sizeof(struct ActrHashTableEntry));
+    struct ActrHashTableEntry * entry = (struct ActrHashTableEntry *)actr_malloc(sizeof(struct ActrHashTableEntry));
     entry->id = id;
     entry->item = item;
     int index = _actr_hash_table_index(table, id);
