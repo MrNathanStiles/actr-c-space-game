@@ -165,7 +165,7 @@ void draw_ship(struct MyObjectShip *ship, int thrusting, int shooting)
             struct ActrFormatState *format = actr_format("%s");
             actr_format_int(format, actr_distance(&state->target, &state->player.object.position));
             char *text = actr_format_close(format);
-            int len = strlen(text);
+            int len = actr_strlen(text);
 
             int padx = 0;
             int pady = 10;
@@ -886,7 +886,7 @@ void draw_menu()
     for (int i = 0; i < state->menu->items->count; i++)
     {
         struct MyMenuItem *item = state->menu->items->head[i];
-        int width = margin + margin + strlen(item->text) * 9;
+        int width = margin + margin + actr_strlen(item->text) * 9;
         if (left + width + margin > actr_ui_state->canvas_size.w)
         {
             left = margin;
