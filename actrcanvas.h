@@ -1,6 +1,7 @@
 #ifndef ACTRCANVAS_H
 #define ACTRCANVAS_H
 #include "actrwasm.h"
+#include "actrstring.h"
 extern void actr_canvas2d_fill_style(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
 extern void actr_canvas2d_stroke_style(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha);
 
@@ -30,7 +31,7 @@ extern void actr_canvas2d_stroke();
 extern void actr_canvas2d_stroke_rect(float x, float y, float w, float h);
 
 void actr_canvas2d_fill_text(float x, float y, const char *text) {
-    _actr_canvas2d_fill_text_length(x, y, text, strlen(text));
+    _actr_canvas2d_fill_text_length(x, y, text, actr_strlen(text));
 }
 
 #endif

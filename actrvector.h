@@ -14,7 +14,7 @@ struct ActrVector
 
 struct ActrVector *actr_vector_init(int initialSize, int incrementSize)
 {
-    struct ActrVector *result = actr_malloc(sizeof(struct ActrVector));
+    struct ActrVector *result = (struct ActrVector *)actr_malloc(sizeof(struct ActrVector));
 
     result->increment = incrementSize;
     result->count = 0;
@@ -22,7 +22,7 @@ struct ActrVector *actr_vector_init(int initialSize, int incrementSize)
 
     if (initialSize > 0)
     {
-        result->head = actr_malloc(sizeof(void *) * initialSize);
+        result->head = (void**)actr_malloc(sizeof(void *) * initialSize);
         result->allocated = initialSize;
     }
 
@@ -47,7 +47,7 @@ int actr_vector_add(struct ActrVector *list, void *item)
         {
             return 0;
         }
-        list->head = actr_malloc(sizeof(void *) * list->increment);
+        list->head = (void**)actr_malloc(sizeof(void *) * list->increment);
         list->allocated = list->increment;
     }
     else if (list->count == list->allocated)
@@ -57,7 +57,7 @@ int actr_vector_add(struct ActrVector *list, void *item)
             return 0;
         }
         list->allocated += list->increment;
-        void **newHead = actr_malloc(sizeof(void *) * list->allocated);
+        void **newHead = (void**)actr_malloc(sizeof(void *) * list->allocated);
 
         for (int i = 0; i < list->count; i++)
         {

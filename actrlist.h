@@ -8,7 +8,7 @@ struct ActrList {
 };
 
 struct ActrList * actr_list(struct ActrList * list, void * item) {
-    struct ActrList * result = actr_malloc(sizeof(struct ActrList));
+    struct ActrList * result = (struct ActrList *)actr_malloc(sizeof(struct ActrList));
     result->item = item;
     result->next = list;
     return result;

@@ -127,45 +127,5 @@ void actr_unpack_bytes(unsigned int value, unsigned char *r, unsigned char *g, u
     *a = value & 0xFF;
 }
 
-/// @brief get length of null terminated string
-/// @param string
-/// @return length of the string
-unsigned long strlen(const char *string)
-{
-    int result = 0;
-    while (*string++)
-    {
-        result++;
-    }
-    return result;
-}
-
-char *substr(char *text, int start, int length)
-{
-    if (length == 0)
-    {
-        length = strlen(text) - start;
-    }
-    char *newText = actr_malloc(length + 1);
-
-    for (int i = 0; i < length; i++)
-    {
-        newText[i] = text[start + i];
-    }
-    return newText;
-}
-void actr_heap_string(char **target, char *text)
-{
-    if (*target != 0)
-    {
-        actr_free(*target);
-    }
-    int size = strlen(text);
-    char *result = actr_malloc(size + 1);
-    for (int i = 0; i < size; i++)
-    {
-        result[i] = text[i];
-    }
-    *target = result;
-}
+void actr_debugger(int value);
 #endif
