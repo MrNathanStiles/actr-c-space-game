@@ -35,6 +35,7 @@ int actr_sign(double value)
 
 extern void _actr_sanity_size(int intSize, int longSize, int floatSize, int doubleSize, int stateSize, void *state);
 extern int actr_authenticated();
+extern void actr_2d_init();
 // end helpers
 struct ActrPoint32 // size 8
 {
